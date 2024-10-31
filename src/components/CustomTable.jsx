@@ -1,5 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table } from 'antd';
 
-const CustomTable = ({tHead, tBody, isLoading}) => <Table loading={isLoading} className='shadow-md shadow-[#8b7700] rounded-md' columns={tHead} dataSource={tBody} />;
+const CustomTable = ({tHead, tBody, isLoading}) => {
+    const [tableParams, setTableParams] = useState({
+        pagination: {
+          current: 1,
+          pageSize: 5,
+        },
+      });
+
+    function handleTableChange(a) {
+        setTableParams({
+            pagination: a
+        })
+    }
+
+    return (
+        <Table pagination={tableParams.pagination} onChange={handleTableChange} loading={isLoading} className='shadow-md shadow-[#8b7700] rounded-md' columns={tHead} dataSource={tBody} />
+    )
+}
 export default CustomTable;
