@@ -4,5 +4,6 @@ export const usePath = {
     students: "/students",
     admin: "/admin",
     organizationAdd: "/organization/add",
-    organizationMore: "/:id"
+    organizationMore: "/:id",
+    organizationEdit: "/edit/:id"
 }

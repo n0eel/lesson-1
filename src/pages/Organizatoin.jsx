@@ -55,6 +55,13 @@ function Organizatoin() {
 
   const [searchData, setSearchData] = useState("")
 
+  function handleChangeSwitch(item, evt) {
+    item.status = evt
+    useAxios().put(`/organization/${item.id}`, item).then(res => {
+        setRefresh(!refresh)
+    })
+  }
+
 
   function handleSearchOrganization(e) {
     setIsLoading(true)
@@ -105,11 +112,11 @@ function Organizatoin() {
       setTBodyData(res.data.map((item, index) => {
         item.action = <div className='flex items-center gap-5'>
           <DashOutlined onClick={() => navigate(`${item.id}`)} className='hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]'/>
-          <EditOutlined className='hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]'/>
+          <EditOutlined onClick={() => navigate(`/edit/${item.id}`)} className='hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]'/>
           <DeleteOutlined onClick={() => handleDeleteItem(item.id)} className='hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]'/>
         </div>
         item.key = index + 1
-        item.status = <Switch defaultChecked={item.status} size='small'/>;
+        item.status = <Switch onChange={(evt) => handleChangeSwitch(item, evt)} checked={item.status} size='small'/>;
         return item
       }))
     })
@@ -127,7 +134,6 @@ function Organizatoin() {
     })
   }, [])
 
-  console.log(tBodyData)
 
   return (
     <div className='p-5'>

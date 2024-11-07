@@ -1,10 +1,11 @@
-import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Modal } from 'antd'
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LoadingOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Modal, Switch } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAxios } from '../hook/useAxios'
 import OrganizationMoreItem from '../components/OrganizationMoreItem'
 import toast, { Toaster } from 'react-hot-toast'
+import Item from 'antd/es/list/Item'
 
 function OrganizationMore() {
     const navigate = useNavigate()
@@ -12,19 +13,26 @@ function OrganizationMore() {
     const [singleData, setSingleData] = useState({})
     const [deleteMoreModal, setDeleteMoreModal] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [deleteMoreId, setDeleteMoreId] = useState(null)
+    const [refresh, setRefresh] = useState(false)
 
-    function handleMoreDeleteItem(id) {
+
+    function handleCheckSwitch(e) {
+        singleData.status = e
+        useAxios().put(`/organization/${id}`, singleData).then(res => {
+            setRefresh(!refresh)
+        })
+    }
+
+
+    function handleMoreDeleteItem() {
         setDeleteMoreModal(true)
-        setIsLoading(id)
-        setDeleteMoreId(id)
     }
 
     function handleSureMoreDeleteItem() {
         setDeleteMoreModal(false)
-        setIsLoading(true)
         toast.success("Deleting...")
-        useAxios().delete(`/organization/${deleteMoreId}`).then(res => {
+        setIsLoading(true)
+        useAxios().delete(`/organization/${id}`).then(res => {
             setTimeout(() => {
                 toast.success("Successfully deleted!")
               }, 700)
@@ -39,7 +47,7 @@ function OrganizationMore() {
         useAxios().get(`/organization/${id}`).then(res => {
             setSingleData(res.data)  
         })
-    }, [])
+    }, [refresh])
 
   return (
     <div className='p-5'>
@@ -50,8 +58,9 @@ function OrganizationMore() {
                 <h2 className='font-bold text-[25px]'>{singleData.name}</h2>
             </div>
             <div className='flex items-center gap-2'>
-                <Button onClick={() => handleMoreDeleteItem(id)} icon={isLoading ? <LoadingOutlined/> : ""} className='delete-btn' type='primary' size='large'>Delete</Button>
-                <Button className='edit-btn' type='primary' size='large'>Edit</Button>
+                <Switch onChange={handleCheckSwitch} size='large' checked={singleData.status}/>
+                <Button onClick={() => handleMoreDeleteItem(id)} icon={isLoading ? <LoadingOutlined/> : <DeleteOutlined/>} className='delete-btn' type='primary' size='large'>Delete</Button>
+                <Button onClick={() => navigate(`/edit/${id}`)} icon={<EditOutlined/>} className='edit-btn' type='primary' size='large'>Edit</Button>
             </div>
         </div>
         <div className='flex justify-between w-[45%] mt-5'>

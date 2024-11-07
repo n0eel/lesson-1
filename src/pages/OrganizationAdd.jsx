@@ -1,12 +1,15 @@
 import { AppstoreAddOutlined, ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Button, Checkbox, DatePicker, Input } from 'antd'
 import axios from 'axios'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { HTTP } from '../hook/useEnv'
 import toast, { Toaster } from 'react-hot-toast'
+import { useAxios } from '../hook/useAxios'
+import dayjs from 'dayjs'
 
 function OrganizationAdd() {
+    const {id} = useParams()
     const navigate = useNavigate()
     const [name, setName] = useState("")
     const [inn, setInn] = useState("")
@@ -16,21 +19,51 @@ function OrganizationAdd() {
     const [status, setStatus] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
+    const dateFormat = 'YYYY-MM-DD';
+
     function handleAddOrganization(e) {
         e.preventDefault()
         const data = { name, inn, director, createdOn, status, address }
-        toast.success("Adding...")
-        setIsLoading(true)
-        axios.post(`${HTTP}/organization`, data).then(res => {
-                setTimeout(() => {
-                    toast.success("Successfully added")
-                }, 700);
-                setTimeout(() => {
-                    setIsLoading(false)
-                    navigate(-1)
-                }, 1400)
-            });
+        if (id) {
+            data.id = id
+            toast.success("Adding...")
+            setIsLoading(true)
+            useAxios().put(`${HTTP}/organization/${id}`, data).then(res => {
+                    setTimeout(() => {
+                        toast.success("Successfully added")
+                    }, 700);
+                    setTimeout(() => {
+                        setIsLoading(false)
+                        navigate(-1)
+                    }, 1400)
+                });
+        }else{
+            toast.success("Adding...")
+            setIsLoading(true)
+            useAxios().post(`${HTTP}/organization`, data).then(res => {
+                    setTimeout(() => {
+                        toast.success("Successfully added")
+                    }, 700);
+                    setTimeout(() => {
+                        setIsLoading(false)
+                        navigate(-1)
+                    }, 1400)
+                });
+        }
     }
+
+    useEffect(() => {
+        if (id) {
+            useAxios().get(`/organization/${id}`).then(res => {
+                setName(res.data.name)
+                setInn(res.data.inn)
+                setDirector(res.data.director)
+                setCreatedOn(res.data.createdOn)
+                setAddress(res.data.address)
+                setStatus(res.data.status)
+            })
+        }
+    }, [])
 
   return (  
     <form onSubmit={handleAddOrganization} className='p-5'>
@@ -38,9 +71,9 @@ function OrganizationAdd() {
         <div className='flex items-center justify-between'>
             <div className='flex items-center'>
             <ArrowLeftOutlined onClick={() => navigate(-1)} className='pr-3 cursor-pointer'/>
-            <h2 className='font-bold text-[25px]'>Add Organization</h2>
+            <h2 className='font-bold text-[25px]'>{id ? "Edit" : "Add"} Organization</h2>
             </div>
-            <Button htmlType='submit' icon={isLoading ? <LoadingOutlined/> : <AppstoreAddOutlined/>} size='large' type='primary'>Save</Button>
+            <Button htmlType='submit' icon={isLoading ? <LoadingOutlined/> : <AppstoreAddOutlined/>} size='large' type='primary'>{id ? "Edit" : "Save"}</Button>
         </div>
         <div className='flex mt-5'>
             <div className='w-[45%] p-5 border-[1px] border-slate-400 rounded-md space-y-5'>
@@ -58,7 +91,7 @@ function OrganizationAdd() {
                 </label>    
                 <label className='flex flex-col'>
                     <span className='text-[15px] text-slate-400 mb-1'>Enter Created Time</span>
-                    <DatePicker value={createdOn} onChange={(b) => setCreatedOn(b)} size='large' placeholder='Enter time' />
+                    <DatePicker value={dayjs(createdOn, dateFormat)} onChange={(b) => setCreatedOn(b)} size='large' placeholder='Enter time' />
                 </label>    
                 <label className='flex flex-col'>
                     <span className='text-[15px] text-slate-400 mb-1'>Enter Organization`s Address</span>

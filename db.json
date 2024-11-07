@@ -1,5 +1,76 @@
 {
-  "organization": [],
+  "organization": [
+    {
+      "name": "BMU1231",
+      "inn": "1234564151",
+      "director": "Icepeekrqrq",
+      "createdOn": "2024-11-18T19:00:00.000Z",
+      "status": true,
+      "address": "Tashkent",
+      "id": "5302"
+    },
+    {
+      "id": "111f",
+      "name": "fasfa",
+      "inn": "41241",
+      "director": "asfasf",
+      "createdOn": "2024-11-12T19:00:00.000Z",
+      "status": false,
+      "address": "12414",
+      "action": {
+        "type": "div",
+        "key": null,
+        "ref": null,
+        "props": {
+          "className": "flex items-center gap-5",
+          "children": [
+            {
+              "type": {},
+              "key": null,
+              "ref": null,
+              "props": {
+                "className": "hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]"
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": {},
+              "key": null,
+              "ref": null,
+              "props": {
+                "className": "hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]"
+              },
+              "_owner": null,
+              "_store": {}
+            },
+            {
+              "type": {},
+              "key": null,
+              "ref": null,
+              "props": {
+                "className": "hover:scale-[1.5] duration-300 cursor-pointer hover:text-[#8b7700] scale-[1.3]"
+              },
+              "_owner": null,
+              "_store": {}
+            }
+          ]
+        },
+        "_owner": null,
+        "_store": {}
+      },
+      "key": 2
+    },
+    {
+      "id": "9de0",
+      "name": "BMU",
+      "inn": "1234567",
+      "director": "Icepeek",
+      "createdOn": "2024-11-12T19:00:00.000Z",
+      "status": false,
+      "address": "Tashkent"
+    }
+  ],
   "students": [],
   "administration": []
 }
